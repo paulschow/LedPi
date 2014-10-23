@@ -28,12 +28,21 @@ urls = ('/', 'index')
 app = web.application(urls, globals())
 
 myform = form.Form(
-    form.Textbox("Red"),
+    form.Textbox("Red",
+        form.notnull,
+        form.regexp('\d+', 'Must be a digit'),
+        form.Validator('Must be more than 0', lambda x: int(x) >= 0),
+        form.Validator('Must be less than 100', lambda x: int(x) <= 100)),
     form.Textbox("Green",
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
-        form.Validator('Must be more than 5', lambda x: int(x) > 5)),
-    form.Textbox("Blue"),
+        form.Validator('Must be more than 0', lambda x: int(x) >= 0),
+        form.Validator('Must be less than 100', lambda x: int(x) <= 100)),
+    form.Textbox("Blue",
+        form.notnull,
+        form.regexp('\d+', 'Must be a digit'),
+        form.Validator('Must be more than 0', lambda x: int(x) >= 0),
+        form.Validator('Must be less than 100', lambda x: int(x) <= 100)),
     #form.Textarea('moe'),
     #form.Checkbox('curly'),
     #form.Dropdown('french', ['mustard', 'fries', 'wine']))
@@ -59,6 +68,7 @@ class index:
             B.ChangeDutyCycle(int(form.d.Blue))
             #return "Grrreat success! boe: %s, bax: %s" %
             #(form.d.boe, form['bax'].value)
+            return render.formtest(form)
 
 if __name__ == "__main__":
     web.internalerror = web.debugerror

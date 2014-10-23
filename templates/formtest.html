@@ -1,6 +1,16 @@
 $def with (form)
 
+<style>
+h1 {font-size:150%;}
+h2 {font-size:150%;}
+p {font-size:100%;}
+s1 {font-size:70%;}
+</style>
+
 <form name="main" method="post"> 
-$if not form.valid: <p class="error">Try again, AmeriCAN:</p>
+$if not form.valid: <p class="error">Try again:</p>
 $:form.render()
 <input type="submit" />    </form>
+<h2>Full on @ 0
+<br>
+<h2>Full off @ 100
