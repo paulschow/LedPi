@@ -32,40 +32,44 @@ myform = form.Form(
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
         form.Validator('Must be more than 0', lambda x: int(x) >= 0),
-        form.Validator('Must be less than 100', lambda x: int(x) <= 255)),
+        form.Validator('Must be less than 255', lambda x: int(x) <= 255)),
     form.Textbox("Green",
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
         form.Validator('Must be more than 0', lambda x: int(x) >= 0),
-        form.Validator('Must be less than 100', lambda x: int(x) <= 255)),
+        form.Validator('Must be less than 255', lambda x: int(x) <= 255)),
     form.Textbox("Blue",
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
         form.Validator('Must be more than 0', lambda x: int(x) >= 0),
-        form.Validator('Must be less than 100', lambda x: int(x) <= 255)),
+        form.Validator('Must be less than 255', lambda x: int(x) <= 255)),
     )
 
 
 class index:
     def GET(self):
-        form = myform()
-        # make sure you create a copy of the form by calling it (line above)
-        # Otherwise changes will appear globally
-        return render.webledpi(form)
+        return render.webledpi(myform)
 
     def POST(self):
-        form = myform()
-        if not form.validates():
-            return render.webledpi(form)
+        if not myform.validates():
+            return render.webledpi(myform)
         else:
             #print form.d.Red
             #print form.d.Green
             #print form.d.Blue
 
+            #R.stop()
+            #G.stop()
+            #B.stop()
+
+            #R.start()
+            #G.start()
+            #B.start()
+
             # Convert intputs to int
-            IntRed = int(form.d.Red)
-            IntGreen = int(form.d.Green)
-            IntBlue = int(form.d.Blue)
+            IntRed = int(myform.d.Red)
+            IntGreen = int(myform.d.Green)
+            IntBlue = int(myform.d.Blue)
 
             # Subtract input from 255 to get positive numbers
             R256 = 255 - IntRed
@@ -83,7 +87,7 @@ class index:
             G.ChangeDutyCycle(G256 / 2.55)
             B.ChangeDutyCycle(B256 / 2.55)
 
-            return render.webledpi(form)
+            return render.webledpi(myform)
 
 if __name__ == "__main__":
     web.internalerror = web.debugerror
