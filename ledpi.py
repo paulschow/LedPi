@@ -32,20 +32,17 @@ myform = form.Form(
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
         form.Validator('Must be more than 0', lambda x: int(x) >= 0),
-        form.Validator('Must be less than 100', lambda x: int(x) <= 100)),
+        form.Validator('Must be less than 100', lambda x: int(x) <= 255)),
     form.Textbox("Green",
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
         form.Validator('Must be more than 0', lambda x: int(x) >= 0),
-        form.Validator('Must be less than 100', lambda x: int(x) <= 100)),
+        form.Validator('Must be less than 100', lambda x: int(x) <= 255)),
     form.Textbox("Blue",
         form.notnull,
         form.regexp('\d+', 'Must be a digit'),
         form.Validator('Must be more than 0', lambda x: int(x) >= 0),
-        form.Validator('Must be less than 100', lambda x: int(x) <= 100)),
-    #form.Textarea('moe'),
-    #form.Checkbox('curly'),
-    #form.Dropdown('french', ['mustard', 'fries', 'wine']))
+        form.Validator('Must be less than 100', lambda x: int(x) <= 255)),
     )
 
 
@@ -54,22 +51,45 @@ class index:
         form = myform()
         # make sure you create a copy of the form by calling it (line above)
         # Otherwise changes will appear globally
-        return render.formtest(form)
+        return render.ledpi(form)
 
     def POST(self):
         form = myform()
         if not form.validates():
-            return render.formtest(form)
+            return render.ledpi(form)
         else:
-            # form.d.boe and form['boe'].value are equivalent ways of
-            # extracting the validated arguments from the form.
-            G.ChangeDutyCycle(int(form.d.Green))
-            R.ChangeDutyCycle(int(form.d.Red))
-            B.ChangeDutyCycle(int(form.d.Blue))
-            #return "Grrreat success! boe: %s, bax: %s" %
-            #(form.d.boe, form['bax'].value)
-            return render.formtest(form)
+            #print form.d.Red
+            #print form.d.Green
+            #print form.d.Blue
+
+            # Convert intputs to int
+            IntRed = int(form.d.Red)
+            IntGreen = int(form.d.Green)
+            IntBlue = int(form.d.Blue)
+
+            # Subtract input from 255 to get positive numbers
+            R256 = 255 - IntRed
+            G256 = 255 - IntGreen
+            B256 = 255 - IntBlue
+            #print R256
+            #print G256
+            #print B256
+
+            print '#%02x%02x%02x' % (IntRed, IntGreen, IntBlue)
+
+            # Divide number by 2.55 to get value out of 100
+            # And set the duty cycle of the LED
+            R.ChangeDutyCycle(R256 / 2.55)
+            G.ChangeDutyCycle(G256 / 2.55)
+            B.ChangeDutyCycle(B256 / 2.55)
+
+            return render.ledpi(form)
 
 if __name__ == "__main__":
     web.internalerror = web.debugerror
     app.run()
+
+#R.stop()
+#G.stop()
+#B.stop()
+#GPIO.cleanup()
