@@ -13,13 +13,13 @@ GPIO.setup(28, GPIO.OUT)  # Green
 GPIO.setup(29, GPIO.OUT)  # Red
 GPIO.setup(30, GPIO.OUT)  # Blue
 
-# Green LED at pin 28, 500 Hz
-G = GPIO.PWM(28, 500)
+# Green LED at pin 28, 60 Hz
+G = GPIO.PWM(28, 60)
 # Start off
 G.start(100)
-R = GPIO.PWM(29, 500)
+R = GPIO.PWM(29, 60)
 R.start(100)
-B = GPIO.PWM(30, 500)
+B = GPIO.PWM(30, 60)
 B.start(100)
 
 render = web.template.render('templates/')
@@ -58,18 +58,12 @@ class index:
             #print form.d.Green
             #print form.d.Blue
 
-            #R.stop()
-            #G.stop()
-            #B.stop()
-
-            #R.start()
-            #G.start()
-            #B.start()
-
             # Convert intputs to int
             IntRed = int(myform.d.Red)
             IntGreen = int(myform.d.Green)
             IntBlue = int(myform.d.Blue)
+
+            print "Red = %d Blue = %d Green = %d" % (IntRed, IntGreen, IntBlue)
 
             # Subtract input from 255 to get positive numbers
             R256 = 255 - IntRed
@@ -79,7 +73,7 @@ class index:
             #print G256
             #print B256
 
-            print '#%02x%02x%02x' % (IntRed, IntGreen, IntBlue)
+            #print '#%02x%02x%02x' % (IntRed, IntGreen, IntBlue)
 
             # Divide number by 2.55 to get value out of 100
             # And set the duty cycle of the LED
