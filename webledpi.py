@@ -51,12 +51,12 @@ class index:
         form = myform()
         # make sure you create a copy of the form by calling it (line above)
         # Otherwise changes will appear globally
-        return render.ledpi(form)
+        return render.webledpi(form)
 
     def POST(self):
         form = myform()
         if not form.validates():
-            return render.ledpi(form)
+            return render.webledpi(form)
         else:
             #print form.d.Red
             #print form.d.Green
@@ -83,7 +83,7 @@ class index:
             G.ChangeDutyCycle(G256 / 2.55)
             B.ChangeDutyCycle(B256 / 2.55)
 
-            return render.ledpi(form)
+            return render.webledpi(form)
 
 if __name__ == "__main__":
     web.internalerror = web.debugerror
