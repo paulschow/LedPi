@@ -1,14 +1,21 @@
+#!/usr/bin/env python
+
+# A small python script for controlling a RGB LED
+# connected to a raspberry pi
+# over the internet
+
 import web
 from web import form
 import RPi.GPIO as GPIO
+import phant
 
-#dont bug me with warnings
+# No GPIO warnings
 GPIO.setwarnings(False)
 
-# to use Raspberry Pi bcm numbers
+# Use Raspberry Pi bcm numbers
 GPIO.setmode(GPIO.BCM)
 
-# set up GPIO output channels
+# Set up GPIO output channels
 GPIO.setup(28, GPIO.OUT)  # Green
 GPIO.setup(29, GPIO.OUT)  # Red
 GPIO.setup(30, GPIO.OUT)  # Blue
@@ -22,11 +29,15 @@ R.start(100)
 B = GPIO.PWM(30, 60)
 B.start(100)
 
+# Set up phant for data.sparkfun.com
+p = phant.Phant('publickey', 'red', 'green', 'blue', private_key='privatekey')
+
 render = web.template.render('templates/')
 
 urls = ('/', 'index')
 app = web.application(urls, globals())
 
+# Create form
 myform = form.Form(
     form.Textbox("Red",
         form.notnull,
@@ -65,6 +76,9 @@ class index:
 
             print "Red = %d Blue = %d Green = %d" % (IntRed, IntGreen, IntBlue)
 
+            # Send values to data.sparkfun.com
+            p.log( IntRed, IntGreen, IntBlue)
+
             # Subtract input from 255 to get positive numbers
             R256 = 255 - IntRed
             G256 = 255 - IntGreen
@@ -87,7 +101,3 @@ if __name__ == "__main__":
     web.internalerror = web.debugerror
     app.run()
 
-#R.stop()
-#G.stop()
-#B.stop()
-#GPIO.cleanup()
